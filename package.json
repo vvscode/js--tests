@@ -5,16 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run lint",
-    "lint": "eslint **/*.js"
+    "lint": "eslint **/*.js",
+    "build": "cp -R src dist",
+    "deploy": "gh-pages-deploy"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vvscode/js--tests.git"
   },
-  "keywords": [
-    "tests",
-    "javascript"
-  ],
+  "keywords": ["tests", "javascript"],
   "author": "@vvscode",
   "license": "ISC",
   "bugs": {
@@ -23,6 +22,13 @@
   "homepage": "https://github.com/vvscode/js--tests#readme",
   "devDependencies": {
     "eslint": "^4.9.0",
-    "eslint-config-google": "^0.9.1"
+    "eslint-config-google": "^0.9.1",
+    "gh-pages-deploy": "^0.4.2"
+  },
+  "gh-pages-deploy": {
+    "staticpath": "dist",
+    "prep": ["build"],
+    "post": [],
+    "noprompt": false
   }
 }
