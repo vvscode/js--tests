@@ -52,7 +52,7 @@ function getSumHandler() {
       return list.reduce((sum, val) => sum + val.sum, 0);
     },
     getList() {
-      return list.map(i => ({ ...i }));
+      return list.map(({ name, sum }) => ({ name, sum }));
     }
   };
 }
@@ -85,4 +85,12 @@ function getSumHandlerListHtml(sumHanlder) {
     "</tbody>",
     "</table>"
   ].join("");
+}
+
+if (typeof window === "object") {
+  window.addFormHandler = addEventListener;
+  window.getSumHandler = getSumHandler;
+  window.getSumHandlerListHtml = getSumHandlerListHtml;
+  window.addFormHandler = addFormHandler;
+  window.getFormData = getFormData;
 }
