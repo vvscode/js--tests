@@ -24,6 +24,9 @@ serialProcess(
 ); // [1,4,9,16,25]
 */
 
+/* global mocha, chai, describe, it, assert  */
+/* global serialProcess, beforeEach */
+
 describe("serialProcess", () => {
   it("функция существует", () => assert.isFunction(serialProcess));
   it("функция ожидает три аргумента", () =>
@@ -32,24 +35,46 @@ describe("serialProcess", () => {
     var list = [1, 2, 3];
     var expectedArgs = list.map((el, index, list) => [el, index, list]);
     var args = [];
+    var i = 0;
     serialProcess(list, (el, index, list, iDone) => {
-      args.push([el, index, list]);
-      assert.isFunction(iDone);
-      if (args.length === list.length) {
-        assert.deepEqual(
-          args,
-          expectedArgs,
-          `должно получиться ${JSON.stringify(expectedArgs)}`
+      try {
+        args.push([el, index, list]);
+        var expectedArguments = expectedArgs[i++];
+        assert.equal(
+          el,
+          expectedArguments[0],
+          `на ${i}й итерации: правильный элемент`
         );
-        done();
+        assert.equal(
+          el,
+          expectedArguments[1],
+          `на ${i}й итерации: правильный индекс`
+        );
+        assert.equal(
+          el,
+          expectedArguments[2],
+          `на ${i}й итерации: правильный список`
+        );
+        assert.isFunction(iDone, "callback последним аргументом");
+        if (args.length === list.length) {
+          assert.deepEqual(
+            args,
+            expectedArgs,
+            `должно получиться ${JSON.stringify(expectedArgs)}`
+          );
+          done();
+        }
+        iDone();
+      } catch (e) {
+        done(e);
       }
-      iDone();
     });
   });
   it("вызывает callback с результатом работы", done => {
     var list = [1, 2, 3];
-    var expectedResult = [1, 2, 3].map(process);
     var process = el => el * el;
+    var expectedResult = [1, 2, 3].map(process);
+
     serialProcess(
       list,
       (el, index, list, iDone) => iDone(process(el)),
